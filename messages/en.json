@@ -1,0 +1,50 @@
+{
+  "navigation": {
+    "shop": "Shop",
+    "blog": "Blog",
+    "categories": "Categories",
+    "cart": "Cart"
+  },
+  "footer": {
+    "imprint": "Imprint",
+    "privacy": "Privacy Policy",
+    "contact": "Contact",
+    "copyright": "© {year} FORMA. All rights reserved.",
+    "tagline": "Tools that work."
+  },
+  "checkout": {
+    "title": "Complete your order",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email address",
+    "address": "Street and number",
+    "city": "City",
+    "postalCode": "Postal code",
+    "country": "Country",
+    "submit": "Place order",
+    "errors": {
+      "required": "This field is required",
+      "invalidEmail": "Please enter a valid email address",
+      "minLength": "At least {min} characters required"
+    },
+    "success": {
+      "title": "Order successful!",
+      "message": "Thank you for your order. A confirmation has been sent to {email}."
+    }
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "An error occurred",
+    "notFound": "Page not found",
+    "backToHome": "Back to home",
+    "currency": "EUR",
+    "locale": "en-US"
+  },
+  "cart": {
+    "empty": "Your cart is empty",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "quantity": "Quantity"
+  }
+}

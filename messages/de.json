@@ -1,0 +1,50 @@
+{
+  "navigation": {
+    "shop": "Shop",
+    "blog": "Blog",
+    "categories": "Kategorien",
+    "cart": "Warenkorb"
+  },
+  "footer": {
+    "imprint": "Impressum",
+    "privacy": "Datenschutz",
+    "contact": "Kontakt",
+    "copyright": "© {year} FORMA. Alle Rechte vorbehalten.",
+    "tagline": "Werkzeuge, die wirken."
+  },
+  "checkout": {
+    "title": "Bestellung abschließen",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail-Adresse",
+    "address": "Straße und Hausnummer",
+    "city": "Stadt",
+    "postalCode": "Postleitzahl",
+    "country": "Land",
+    "submit": "Jetzt bestellen",
+    "errors": {
+      "required": "Dieses Feld ist erforderlich",
+      "invalidEmail": "Bitte gültige E-Mail-Adresse eingeben",
+      "minLength": "Mindestens {min} Zeichen erforderlich"
+    },
+    "success": {
+      "title": "Bestellung erfolgreich!",
+      "message": "Vielen Dank für deine Bestellung. Eine Bestätigung wurde an {email} gesendet."
+    }
+  },
+  "common": {
+    "loading": "Wird geladen…",
+    "error": "Ein Fehler ist aufgetreten",
+    "notFound": "Seite nicht gefunden",
+    "backToHome": "Zurück zur Startseite",
+    "currency": "EUR",
+    "locale": "de-DE"
+  },
+  "cart": {
+    "empty": "Dein Warenkorb ist leer",
+    "total": "Gesamt",
+    "checkout": "Zur Kasse",
+    "remove": "Entfernen",
+    "quantity": "Menge"
+  }
+}
