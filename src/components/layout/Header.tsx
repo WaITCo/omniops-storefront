@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import LocaleSwitcher from './LocaleSwitcher';
+import { useCartStore } from '@/lib/cart-store';
 
 export default function Header() {
   const t = useTranslations('navigation');
+  const itemCount = useCartStore((s) => s.totalItems());
 
   return (
     <header className="border-b border-muted bg-background">
@@ -41,13 +43,18 @@ export default function Header() {
 
           <div className="flex items-center gap-4">
             <LocaleSwitcher />
-            {/* Cart-Indikator wird in Issue #10 implementiert */}
-            <button
+            <Link
+              href="/checkout"
               aria-label={t('cart')}
-              className="font-mono text-sm uppercase tracking-wider text-foreground hover:text-accent transition-colors"
+              className="relative font-mono text-sm uppercase tracking-wider text-foreground hover:text-accent transition-colors"
             >
-              {t('cart')} (0)
-            </button>
+              {t('cart')}
+              {itemCount > 0 && (
+                <span className="ml-1 inline-flex items-center justify-center w-5 h-5 bg-accent text-white text-xs font-bold rounded-full">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
           </div>
         </div>
       </div>
