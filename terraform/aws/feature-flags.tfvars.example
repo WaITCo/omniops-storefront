@@ -1,0 +1,7 @@
+aws_region       = "eu-central-1"
+project_name     = "storefront"
+image_tag        = "latest"
+strapi_url       = "https://your-strapi-instance.example.com"
+strapi_api_token = "your-strapi-api-token"
+n8n_webhook_url  = "https://your-n8n-instance.example.com/webhook/order-confirmed"
+site_url         = "https://your-storefront.example.com"
