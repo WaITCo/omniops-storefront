@@ -5,6 +5,7 @@ import { Konfetti } from '@/components/ui/Konfetti';
 
 export const metadata: Metadata = {
   title: 'Vielen Dank! – FORMA',
+  robots: { index: false, follow: false },
 };
 
 export default function DankePage() {

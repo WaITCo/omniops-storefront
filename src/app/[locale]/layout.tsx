@@ -27,9 +27,23 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? '';
+
 export const metadata: Metadata = {
-  title: 'FORMA – Werkzeuge, die wirken.',
-  description: 'Hochwertige digitale Werkzeuge für Ihren Alltag.',
+  title: {
+    default: 'FORMA – Werkzeuge, die wirken.',
+    template: '%s – FORMA',
+  },
+  description: 'Kuratierte digitale Produkte für moderne Teams.',
+  metadataBase: new URL(siteUrl || 'https://example.com'),
+  openGraph: {
+    siteName: 'FORMA',
+    type: 'website',
+    images: [{ url: '/images/og-default.svg', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
 };
 
 type Props = {
