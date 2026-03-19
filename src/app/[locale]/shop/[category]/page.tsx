@@ -1,0 +1,100 @@
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import { notFound } from 'next/navigation';
+import { getCategories, getCategoryBySlug, getProducts } from '@/lib/strapi';
+import { ProductGrid } from '@/components/product/ProductGrid';
+import { buildMetadata } from '@/components/ui/SeoHead';
+import Link from 'next/link';
+
+export const revalidate = 60;
+
+type Props = { params: Promise<{ locale: string; category: string }> };
+
+export async function generateStaticParams() {
+  try {
+    const response = await getCategories({ fields: ['slug'], pagination: { pageSize: 100 } });
+    return response.data.map((cat) => ({ category: cat.slug }));
+  } catch {
+    return [];
+  }
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { category } = await params;
+  try {
+    const result = await getCategoryBySlug(category);
+    if (result) {
+      return buildMetadata({
+        seo: result.data.seo,
+        fallbackTitle: `${result.data.name} – FORMA Shop`,
+        fallbackDescription: result.data.description ?? undefined,
+      });
+    }
+  } catch {}
+  return { title: 'Shop – FORMA' };
+}
+
+export default async function CategoryPage({ params }: Props) {
+  const { category } = await params;
+  const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL ?? '';
+
+  let catResult = null;
+  try {
+    catResult = await getCategoryBySlug(category);
+  } catch {}
+
+  if (!catResult) notFound();
+
+  const cat = catResult.data;
+
+  let products = [];
+  try {
+    const prodResponse = await getProducts({
+      filters: { categories: { slug: { $eq: category } } },
+      pagination: { pageSize: 48 },
+    });
+    products = prodResponse.data;
+  } catch {}
+
+  return (
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-foreground/50 mb-10">
+        <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
+        <span>/</span>
+        <Link href="/shop" className="hover:text-foreground transition-colors">Shop</Link>
+        <span>/</span>
+        <span className="text-foreground">{cat.name}</span>
+      </nav>
+
+      {/* Category Header */}
+      <div className="mb-12">
+        {cat.image && (
+          <div className="relative h-48 md:h-64 overflow-hidden mb-8">
+            <Image
+              src={`${strapiUrl}${cat.image.url}`}
+              alt={cat.image.alternativeText ?? cat.name}
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-foreground/30" />
+            <h1 className="absolute bottom-6 left-6 font-serif text-4xl text-white">
+              {cat.name}
+            </h1>
+          </div>
+        )}
+        {!cat.image && (
+          <h1 className="font-serif text-5xl text-foreground mb-4">{cat.name}</h1>
+        )}
+        {cat.description && (
+          <p className="font-sans text-foreground/70 max-w-2xl leading-relaxed">
+            {cat.description}
+          </p>
+        )}
+      </div>
+
+      <ProductGrid products={products} />
+    </div>
+  );
+}
