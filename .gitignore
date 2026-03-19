@@ -51,3 +51,9 @@ terraform.tfstate.*
 .terraform/
 *.tfvars
 !*.tfvars.example
+
+# Mocks
+/mocks/*
+
+# Claude Code
+/.claude/settings.local.json
