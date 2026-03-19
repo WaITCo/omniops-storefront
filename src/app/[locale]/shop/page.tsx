@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getCategories } from '@/lib/strapi';
+import type { Category } from '@/lib/strapi-types';
 
 export const revalidate = 60;
 
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ShopPage() {
-  let categories = [];
+  let categories: Category[] = [];
   try {
     const response = await getCategories({ pagination: { pageSize: 24 } });
     categories = response.data;

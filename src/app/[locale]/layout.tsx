@@ -1,12 +1,15 @@
 import type { Metadata } from 'next';
 import { Instrument_Serif, Inter, JetBrains_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import '../globals.css';
+
+// Force SSR for all routes under [locale] – avoids ISR/static conflicts with next-intl
+// in production Docker where React cache() scope differs between layout and page phases
+export const dynamic = 'force-dynamic';
 
 const instrumentSerif = Instrument_Serif({
   weight: ['400'],
@@ -58,7 +61,14 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
-  const messages = await getMessages();
+  // Import messages directly from JSON – bypasses next-intl's getConfig()/getRequestLocale()
+  // pipeline which triggers headers() in production Docker → DYNAMIC_SERVER_USAGE
+  // Static map required because Turbopack cannot resolve dynamic template literal imports
+  const messagesMap: Record<string, () => Promise<{ default: Record<string, unknown> }>> = {
+    de: () => import('../../../messages/de.json'),
+    en: () => import('../../../messages/en.json'),
+  };
+  const messages = (await (messagesMap[locale] ?? messagesMap['de'])()).default;
 
   return (
     <html
@@ -66,7 +76,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       className={`${instrumentSerif.variable} ${inter.variable} ${jetbrainsMono.variable}`}
     >
       <body className="bg-background text-foreground font-sans antialiased">
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <Header />
           <main>{children}</main>
           <Footer />

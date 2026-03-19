@@ -1,0 +1,70 @@
+{
+  "name": "eCommerce – Willkommens-E-Mail",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "contact-created",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-contact-created",
+      "name": "Webhook: Kontakt erstellt",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $vars.SHOP_EMAIL ?? 'shop@demoshop.de' }}",
+        "toEmail": "={{ $json.body.email }}",
+        "subject": "Willkommen bei DemoShop!",
+        "text": "Hallo {{ $json.body.firstName }},\n\nwillkommen bei DemoShop! Wir freuen uns, dich als neuen Kunden begrüßen zu dürfen.\n\nEntdecke jetzt unsere neuesten Produkte und profitiere von unserem Willkommensrabatt mit dem Code WILLKOMMEN10.\n\nViele Grüße\nDein DemoShop-Team",
+        "options": {}
+      },
+      "id": "send-welcome-email",
+      "name": "E-Mail: Willkommen senden",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [480, 300],
+      "credentials": {
+        "smtp": {
+          "id": "",
+          "name": "SMTP (Platzhalter)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"status\": \"ok\"}"
+      },
+      "id": "respond-webhook",
+      "name": "Antwort senden",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [720, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Kontakt erstellt": {
+      "main": [
+        [{ "node": "E-Mail: Willkommen senden", "type": "main", "index": 0 }]
+      ]
+    },
+    "E-Mail: Willkommen senden": {
+      "main": [
+        [{ "node": "Antwort senden", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateId": "ecommerce-welcome-email"
+  },
+  "tags": ["ecommerce"]
+}

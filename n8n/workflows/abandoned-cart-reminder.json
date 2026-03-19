@@ -1,0 +1,90 @@
+{
+  "name": "eCommerce – Abandoned Cart Reminder",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 * * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-hourly",
+      "name": "Schedule: Stündlich",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $vars.STRAPI_URL ?? 'http://strapi:1337' }}/api/carts?filters[status][$eq]=abandoned&filters[updatedAt][$lte]={{ new Date(Date.now() - 3600000).toISOString() }}&populate=customer",
+        "options": {}
+      },
+      "id": "fetch-abandoned-carts",
+      "name": "Strapi: Abgebrochene Warenkörbe",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "split-carts",
+      "name": "Aufteilen in Einzelelemente",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $vars.SHOP_EMAIL ?? 'shop@demoshop.de' }}",
+        "toEmail": "={{ $json.attributes.customer?.data?.attributes?.email }}",
+        "subject": "Du hast etwas vergessen! Dein Warenkorb wartet auf dich",
+        "text": "Hallo,\n\ndu hast Artikel in deinem Warenkorb liegen gelassen. Kein Problem – sie warten noch auf dich!\n\nZurück zu deinem Warenkorb: {{ $vars.SHOP_URL ?? 'https://demoshop.de' }}/cart\n\nViele Grüße\nDein DemoShop-Team",
+        "options": {}
+      },
+      "id": "send-reminder-email",
+      "name": "E-Mail: Erinnerung senden",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [960, 300],
+      "credentials": {
+        "smtp": {
+          "id": "",
+          "name": "SMTP (Platzhalter)"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule: Stündlich": {
+      "main": [
+        [{ "node": "Strapi: Abgebrochene Warenkörbe", "type": "main", "index": 0 }]
+      ]
+    },
+    "Strapi: Abgebrochene Warenkörbe": {
+      "main": [
+        [{ "node": "Aufteilen in Einzelelemente", "type": "main", "index": 0 }]
+      ]
+    },
+    "Aufteilen in Einzelelemente": {
+      "main": [
+        [{ "node": "E-Mail: Erinnerung senden", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateId": "ecommerce-abandoned-cart-reminder"
+  },
+  "tags": ["ecommerce"]
+}

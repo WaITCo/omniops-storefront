@@ -2,22 +2,13 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getBlogPosts, getBlogPostBySlug } from '@/lib/strapi';
+import { getBlogPostBySlug } from '@/lib/strapi';
 import { RichText } from '@/components/ui/RichText';
 import { buildMetadata } from '@/components/ui/SeoHead';
 
 export const revalidate = 60;
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
-
-export async function generateStaticParams() {
-  try {
-    const response = await getBlogPosts({ fields: ['slug'], pagination: { pageSize: 100 } });
-    return response.data.map((post) => ({ slug: post.slug }));
-  } catch {
-    return [];
-  }
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

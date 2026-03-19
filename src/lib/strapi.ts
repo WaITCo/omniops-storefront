@@ -65,7 +65,9 @@ async function fetchStrapi<T>(
   params: StrapiQueryParams = {},
   options: RequestInit = {}
 ): Promise<T> {
-  const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL ?? 'http://localhost:1337';
+  // STRAPI_INTERNAL_URL overrides for server-side fetches inside Docker containers
+  // (host.docker.internal vs localhost for browser image URLs)
+  const baseUrl = process.env.STRAPI_INTERNAL_URL ?? process.env.NEXT_PUBLIC_STRAPI_URL ?? 'http://localhost:1337';
   const queryString = buildQueryString(params);
   const url = `${baseUrl}/api${path}${queryString}`;
 

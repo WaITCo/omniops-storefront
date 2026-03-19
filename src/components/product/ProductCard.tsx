@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import type { Product } from '@/lib/strapi-types';
 import { Badge } from '@/components/ui/Badge';
 import { PriceDisplay } from './PriceDisplay';
@@ -9,7 +9,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const { name, slug, short_description, images, variants } = product;
+  const { name, slug, short_description, images, variants, categories } = product;
+  const categorySlug = categories?.[0]?.slug ?? '_';
   const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL ?? '';
 
   const coverImage = images?.[0];
@@ -27,7 +28,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const isOnSale = hasCompareAt;
 
   return (
-    <Link href={`/shop/${slug}`} className="group block">
+    <Link href={`/shop/${categorySlug}/${slug}`} className="group block">
       <div className="relative aspect-square overflow-hidden bg-muted mb-4">
         {coverImage ? (
           <Image

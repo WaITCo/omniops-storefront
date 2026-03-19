@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { getBlogPosts } from '@/lib/strapi';
+import type { BlogPost } from '@/lib/strapi-types';
 import { BlogGrid } from '@/components/blog/BlogGrid';
 
 export const revalidate = 60;
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  let posts = [];
+  let posts: BlogPost[] = [];
   try {
     const response = await getBlogPosts({ pagination: { pageSize: 24 } });
     posts = response.data;

@@ -29,24 +29,36 @@ export async function POST(request: NextRequest) {
 
   const { customerName, customerEmail, company, productName, totalAmount } = parsed.data;
 
-  const webhookUrl = process.env.N8N_WEBHOOK_URL;
-  if (webhookUrl) {
+  const payload = JSON.stringify({ customerName, customerEmail, company, productName, totalAmount });
+
+  async function callWebhook(url: string, label: string) {
     try {
-      const res = await fetch(webhookUrl, {
+      const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customerName, customerEmail, company, productName, totalAmount }),
+        body: payload,
       });
       if (!res.ok) {
-        console.error(`[checkout] n8n webhook failed: ${res.status} ${res.statusText}`);
+        console.error(`[checkout] ${label} failed: ${res.status} ${res.statusText}`);
       }
     } catch (err) {
-      // Graceful degradation – Danke-Seite trotzdem zeigen
-      console.error('[checkout] n8n webhook error (non-blocking):', err);
+      console.error(`[checkout] ${label} error (non-blocking):`, err);
     }
-  } else {
-    console.warn('[checkout] N8N_WEBHOOK_URL not configured – skipping webhook');
   }
+
+  const webhooks: Promise<void>[] = [];
+  if (process.env.N8N_WEBHOOK_URL) {
+    webhooks.push(callWebhook(process.env.N8N_WEBHOOK_URL, 'email webhook'));
+  } else {
+    console.warn('[checkout] N8N_WEBHOOK_URL not configured – skipping email webhook');
+  }
+  if (process.env.N8N_CRM_WEBHOOK_URL) {
+    webhooks.push(callWebhook(process.env.N8N_CRM_WEBHOOK_URL, 'crm webhook'));
+  } else {
+    console.warn('[checkout] N8N_CRM_WEBHOOK_URL not configured – skipping crm webhook');
+  }
+
+  await Promise.all(webhooks);
 
   return NextResponse.json({ success: true });
 }

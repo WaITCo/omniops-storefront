@@ -1,0 +1,292 @@
+{
+  "name": "eCommerce – Bestellung in Twenty CRM",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "order-to-crm",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook",
+      "name": "Webhook: Bestellung → CRM",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body;\nconst parts = (body.customerName || 'Unbekannt').trim().split(' ');\nconst firstName = parts[0] || 'Unbekannt';\nconst lastName = parts.slice(1).join(' ') || '';\nconst totalAmount = Number(body.totalAmount) || 0;\n\nreturn [{\n  json: {\n    firstName,\n    lastName,\n    email: body.customerEmail,\n    company: body.company || '',\n    productName: body.productName,\n    totalAmount,\n    orderName: `Bestellung – ${body.productName} (${body.customerName})`\n  }\n}];"
+      },
+      "id": "node-code",
+      "name": "Daten aufbereiten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:3000/graphql",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ query: 'query SearchPerson($email: String!) { people(filter: { emails: { primaryEmail: { eq: $email } } }) { edges { node { id } } } }', variables: { email: $json.email } }) }}",
+        "options": {}
+      },
+      "id": "node-search-person",
+      "name": "Person in Twenty suchen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Twenty API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-person-found",
+              "leftValue": "={{ $json.data.people.edges.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-if-person",
+      "name": "Person gefunden?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [960, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "existing-person-id",
+              "name": "personId",
+              "value": "={{ $json.data.people.edges[0].node.id }}",
+              "type": "string"
+            },
+            {
+              "id": "existing-order-name",
+              "name": "orderName",
+              "value": "={{ $('Daten aufbereiten').first().json.orderName }}",
+              "type": "string"
+            },
+            {
+              "id": "existing-total",
+              "name": "totalAmount",
+              "value": "={{ $('Daten aufbereiten').first().json.totalAmount }}",
+              "type": "number"
+            },
+            {
+              "id": "existing-product",
+              "name": "productName",
+              "value": "={{ $('Daten aufbereiten').first().json.productName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-set-existing-id",
+      "name": "Vorhandene Person-ID",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1200, 160]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:3000/graphql",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ query: 'mutation CreatePerson($firstName: String!, $lastName: String!, $email: String!) { createPerson(data: { name: { firstName: $firstName, lastName: $lastName }, emails: { primaryEmail: $email } }) { id } }', variables: { firstName: $('Daten aufbereiten').first().json.firstName, lastName: $('Daten aufbereiten').first().json.lastName, email: $('Daten aufbereiten').first().json.email } }) }}",
+        "options": {}
+      },
+      "id": "node-create-person",
+      "name": "Person in Twenty anlegen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1200, 440],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Twenty API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "new-person-id",
+              "name": "personId",
+              "value": "={{ $json.data.createPerson.id }}",
+              "type": "string"
+            },
+            {
+              "id": "new-order-name",
+              "name": "orderName",
+              "value": "={{ $('Daten aufbereiten').first().json.orderName }}",
+              "type": "string"
+            },
+            {
+              "id": "new-total",
+              "name": "totalAmount",
+              "value": "={{ $('Daten aufbereiten').first().json.totalAmount }}",
+              "type": "number"
+            },
+            {
+              "id": "new-product",
+              "name": "productName",
+              "value": "={{ $('Daten aufbereiten').first().json.productName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-set-new-id",
+      "name": "Neue Person-ID",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1440, 440]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:3000/graphql",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ query: 'mutation CreateOrder($name: String!, $totalAmount: Float!) { createOrder(data: { name: $name, totalAmount: $totalAmount, status: NEW }) { id } }', variables: { name: $json.orderName, totalAmount: $json.totalAmount } }) }}",
+        "options": {}
+      },
+      "id": "node-create-order",
+      "name": "Order in Twenty anlegen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1680, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Twenty API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:3000/graphql",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ query: 'mutation CreateOrderLineItem($name: String!, $unitPrice: Float!, $totalPrice: Float!) { createOrderLineItem(data: { name: $name, quantity: 1, unitPrice: $unitPrice, totalPrice: $totalPrice }) { id } }', variables: { name: $('Daten aufbereiten').first().json.productName, unitPrice: $('Daten aufbereiten').first().json.totalAmount, totalPrice: $('Daten aufbereiten').first().json.totalAmount } }) }}",
+        "options": {}
+      },
+      "id": "node-create-lineitem",
+      "name": "OrderLineItem anlegen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1920, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Twenty API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"status\": \"ok\"}"
+      },
+      "id": "node-respond",
+      "name": "Antwort senden",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2160, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Bestellung → CRM": {
+      "main": [
+        [{ "node": "Daten aufbereiten", "type": "main", "index": 0 }]
+      ]
+    },
+    "Daten aufbereiten": {
+      "main": [
+        [{ "node": "Person in Twenty suchen", "type": "main", "index": 0 }]
+      ]
+    },
+    "Person in Twenty suchen": {
+      "main": [
+        [{ "node": "Person gefunden?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Person gefunden?": {
+      "main": [
+        [{ "node": "Vorhandene Person-ID", "type": "main", "index": 0 }],
+        [{ "node": "Person in Twenty anlegen", "type": "main", "index": 0 }]
+      ]
+    },
+    "Vorhandene Person-ID": {
+      "main": [
+        [{ "node": "Order in Twenty anlegen", "type": "main", "index": 0 }]
+      ]
+    },
+    "Person in Twenty anlegen": {
+      "main": [
+        [{ "node": "Neue Person-ID", "type": "main", "index": 0 }]
+      ]
+    },
+    "Neue Person-ID": {
+      "main": [
+        [{ "node": "Order in Twenty anlegen", "type": "main", "index": 0 }]
+      ]
+    },
+    "Order in Twenty anlegen": {
+      "main": [
+        [{ "node": "OrderLineItem anlegen", "type": "main", "index": 0 }]
+      ]
+    },
+    "OrderLineItem anlegen": {
+      "main": [
+        [{ "node": "Antwort senden", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateId": "ecommerce-order-to-crm"
+  },
+  "tags": ["ecommerce", "crm"]
+}

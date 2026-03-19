@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { getCategories, getCategoryBySlug, getProducts } from '@/lib/strapi';
+import { getCategoryBySlug, getProducts } from '@/lib/strapi';
+import type { Product } from '@/lib/strapi-types';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { buildMetadata } from '@/components/ui/SeoHead';
 import Link from 'next/link';
@@ -9,15 +10,6 @@ import Link from 'next/link';
 export const revalidate = 60;
 
 type Props = { params: Promise<{ locale: string; category: string }> };
-
-export async function generateStaticParams() {
-  try {
-    const response = await getCategories({ fields: ['slug'], pagination: { pageSize: 100 } });
-    return response.data.map((cat) => ({ category: cat.slug }));
-  } catch {
-    return [];
-  }
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params;
@@ -47,7 +39,7 @@ export default async function CategoryPage({ params }: Props) {
 
   const cat = catResult.data;
 
-  let products = [];
+  let products: Product[] = [];
   try {
     const prodResponse = await getProducts({
       filters: { categories: { slug: { $eq: category } } },

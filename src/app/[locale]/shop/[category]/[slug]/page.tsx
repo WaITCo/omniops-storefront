@@ -1,26 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getCategories, getProducts, getProductBySlug, getGlobalSettings } from '@/lib/strapi';
+import { getProductBySlug, getGlobalSettings } from '@/lib/strapi';
 import { buildMetadata } from '@/components/ui/SeoHead';
 import { ProductDetail } from './ProductDetail';
 
 export const revalidate = 60;
 
 type Props = { params: Promise<{ locale: string; category: string; slug: string }> };
-
-export async function generateStaticParams() {
-  try {
-    const [catsRes, prodsRes] = await Promise.all([
-      getCategories({ fields: ['slug'], pagination: { pageSize: 100 } }),
-      getProducts({ fields: ['slug'], pagination: { pageSize: 500 } }),
-    ]);
-    return prodsRes.data.flatMap((prod) =>
-      catsRes.data.map((cat) => ({ category: cat.slug, slug: prod.slug }))
-    );
-  } catch {
-    return [];
-  }
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

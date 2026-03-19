@@ -1,0 +1,98 @@
+{
+  "name": "eCommerce – Low Stock Alert",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-daily",
+      "name": "Schedule: Täglich 07:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $vars.STRAPI_URL ?? 'http://strapi:1337' }}/api/product-variants?filters[stock_quantity][$lte]=5&filters[is_active][$eq]=true&populate=product",
+        "options": {}
+      },
+      "id": "fetch-low-stock",
+      "name": "Strapi: Varianten mit niedrigem Lagerbestand",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.data.length }}",
+              "operation": "larger",
+              "value2": 0
+            }
+          ]
+        }
+      },
+      "id": "check-has-results",
+      "name": "Prüfe: Gibt es Treffer?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $vars.SHOP_EMAIL ?? 'shop@demoshop.de' }}",
+        "toEmail": "={{ $vars.ADMIN_EMAIL ?? 'admin@demoshop.de' }}",
+        "subject": "Low Stock Alert – {{ $json.data.length }} Varianten mit niedrigem Lagerbestand",
+        "text": "Folgende Produktvarianten haben einen Lagerbestand von 5 oder weniger:\n\n{{ $json.data.map(v => `- ${v.attributes.product?.data?.attributes?.name} | SKU: ${v.attributes.sku} | Bestand: ${v.attributes.stock_quantity}`).join('\\n') }}\n\nBitte Lagerbestand auffüllen.",
+        "options": {}
+      },
+      "id": "send-alert-email",
+      "name": "E-Mail: Low Stock Alert",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [960, 200],
+      "credentials": {
+        "smtp": {
+          "id": "",
+          "name": "SMTP (Platzhalter)"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule: Täglich 07:00": {
+      "main": [
+        [{ "node": "Strapi: Varianten mit niedrigem Lagerbestand", "type": "main", "index": 0 }]
+      ]
+    },
+    "Strapi: Varianten mit niedrigem Lagerbestand": {
+      "main": [
+        [{ "node": "Prüfe: Gibt es Treffer?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Prüfe: Gibt es Treffer?": {
+      "main": [
+        [{ "node": "E-Mail: Low Stock Alert", "type": "main", "index": 0 }],
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateId": "ecommerce-low-stock-alert"
+  },
+  "tags": ["ecommerce"]
+}
