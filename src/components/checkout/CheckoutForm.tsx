@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
-import { Konfetti } from '@/components/ui/Konfetti';
+import { useCartStore } from '@/lib/cart-store';
 
 interface FormData {
   firstName: string;
@@ -26,13 +27,13 @@ export function CheckoutForm({
   price,
 }: CheckoutFormProps) {
   const t = useTranslations('checkout');
-  const [success, setSuccess] = useState(false);
+  const router = useRouter();
+  const clearCart = useCartStore((s) => s.clearCart);
   const [apiError, setApiError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
@@ -42,7 +43,13 @@ export function CheckoutForm({
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, productId, variantId, price }),
+        body: JSON.stringify({
+          customerName: data.firstName,
+          customerEmail: data.email,
+          company: data.company,
+          productName,
+          totalAmount: price,
+        }),
       });
 
       if (!res.ok) {
@@ -51,22 +58,11 @@ export function CheckoutForm({
         return;
       }
 
-      setSuccess(true);
+      clearCart();
+      router.push('/danke');
     } catch {
       setApiError('Netzwerkfehler – bitte versuche es erneut');
     }
-  }
-
-  if (success) {
-    return (
-      <div className="py-12 text-center">
-        <Konfetti />
-        <h2 className="font-serif text-3xl text-foreground mb-4">{t('success.title')}</h2>
-        <p className="font-sans text-foreground/70">
-          {t('success.message', { email: getValues('email') })}
-        </p>
-      </div>
-    );
   }
 
   return (
