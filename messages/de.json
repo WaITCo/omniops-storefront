@@ -78,7 +78,8 @@
     "allCategories": "Alle",
     "readMore": "Artikel lesen",
     "readTime": "{minutes} Min. Lesezeit",
-    "noPostsFound": "Keine Beiträge gefunden"
+    "noPostsFound": "Keine Beiträge gefunden",
+    "backToBlog": "Zurück zum Blog"
   },
   "shop": {
     "filters": "Filter",
