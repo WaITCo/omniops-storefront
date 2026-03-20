@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
-import { getCategoryBySlug, getProducts } from '@/lib/strapi';
-import type { Product } from '@/lib/strapi-types';
-import { ProductGrid } from '@/components/product/ProductGrid';
-import { buildMetadata } from '@/components/ui/SeoHead';
 import Link from 'next/link';
+import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
+import { getCategoryBySlug, getCategories, getProducts } from '@/lib/strapi';
+import type { Product, Category } from '@/lib/strapi-types';
+import { ProductFilters } from '@/components/product/ProductFilters';
+import { ShopProductsView } from '@/components/product/ShopProductsView';
+import { buildMetadata } from '@/components/ui/SeoHead';
 
 export const revalidate = 60;
 
@@ -40,12 +42,18 @@ export default async function CategoryPage({ params }: Props) {
   const cat = catResult.data;
 
   let products: Product[] = [];
+  let allCategories: Category[] = [];
+
   try {
-    const prodResponse = await getProducts({
-      filters: { categories: { slug: { $eq: category } } },
-      pagination: { pageSize: 48 },
-    });
+    const [prodResponse, catResponse] = await Promise.all([
+      getProducts({
+        filters: { categories: { slug: { $eq: category } } },
+        pagination: { pageSize: 100 },
+      }),
+      getCategories({ pagination: { pageSize: 48 } }),
+    ]);
     products = prodResponse.data;
+    allCategories = catResponse.data;
   } catch {}
 
   return (
@@ -86,7 +94,27 @@ export default async function CategoryPage({ params }: Props) {
         )}
       </div>
 
-      <ProductGrid products={products} />
+      <div className="lg:grid lg:grid-cols-[260px_1fr] lg:gap-10">
+        {/* Sidebar */}
+        <div className="hidden lg:block">
+          <div className="sticky top-24">
+            <Suspense fallback={null}>
+              <ProductFilters categories={allCategories} />
+            </Suspense>
+          </div>
+        </div>
+
+        {/* Main content */}
+        <div className="min-w-0">
+          <Suspense fallback={
+            <p className="font-mono text-sm text-foreground/40 uppercase tracking-wider py-12 text-center">
+              Wird geladen…
+            </p>
+          }>
+            <ShopProductsView products={products} categories={allCategories} />
+          </Suspense>
+        </div>
+      </div>
     </div>
   );
 }
