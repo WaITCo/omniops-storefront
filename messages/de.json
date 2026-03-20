@@ -67,5 +67,32 @@
     "readMore": "Artikel lesen",
     "readTime": "{minutes} Min. Lesezeit",
     "noPostsFound": "Keine Beiträge gefunden"
+  },
+  "shop": {
+    "filters": "Filter",
+    "resetFilters": "Filter zurücksetzen",
+    "category": "Kategorie",
+    "level": "Niveau",
+    "price": "Preis",
+    "rating": "Bewertung",
+    "allLevels": "Alle Niveaus",
+    "beginner": "Einsteiger",
+    "intermediate": "Fortgeschrittene",
+    "expert": "Experte",
+    "allPrices": "Alle Preise",
+    "under50": "Unter 50 €",
+    "50to100": "50 – 100 €",
+    "over100": "Über 100 €",
+    "allRatings": "Alle Bewertungen",
+    "sortBy": "Sortieren nach",
+    "sortPopular": "Beliebteste",
+    "sortNewest": "Neueste",
+    "sortPriceAsc": "Preis ↑",
+    "sortPriceDesc": "Preis ↓",
+    "sortRating": "Bewertung",
+    "productsFound": "{count} Produkte gefunden",
+    "gridView": "Rasteransicht",
+    "listView": "Listenansicht",
+    "noProducts": "Keine Produkte gefunden"
   }
 }
