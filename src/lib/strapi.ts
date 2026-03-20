@@ -105,7 +105,7 @@ export async function getProducts(
   params: StrapiQueryParams = {}
 ): Promise<StrapiListResponse<Product>> {
   return fetchStrapi<StrapiListResponse<Product>>('/products', {
-    populate: ['images', 'categories', 'variants', 'options', 'seo'],
+    populate: ['images', 'categories', 'variants', 'options', 'seo', 'instructorAvatar'],
     ...params,
   });
 }
@@ -115,7 +115,11 @@ export async function getProductBySlug(
 ): Promise<StrapiSingleResponse<Product> | null> {
   const response = await fetchStrapi<StrapiListResponse<Product>>('/products', {
     filters: { slug: { $eq: slug } },
-    populate: ['images', 'categories', 'variants', 'variants.image', 'options', 'options.values', 'seo'],
+    populate: [
+      'images', 'categories', 'variants', 'variants.image',
+      'options', 'options.values', 'seo',
+      'instructorAvatar', 'curriculum'
+    ],
   });
   if (!response.data.length) return null;
   return { data: response.data[0], meta: response.meta };

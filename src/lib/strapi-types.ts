@@ -60,6 +60,13 @@ export interface SeoMetadata {
 // Product
 // ============================================================
 
+export interface CurriculumItem {
+  id: number;
+  title: string;
+  duration: string | null;
+  isFree: boolean;
+}
+
 export interface ProductOptionValue {
   id: number;
   documentId: string;
@@ -99,6 +106,23 @@ export interface Product {
   variants: ProductVariant[];
   options: ProductOption[];
   seo: SeoMetadata | null;
+  badge: 'BESTSELLER' | 'NEU' | 'SALE' | null;
+  originalPrice: number | null;
+  instructor: string | null;
+  instructorBio: string | null;
+  instructorAvatar: StrapiImage | null;
+  level: 'Einsteiger' | 'Fortgeschrittene' | 'Experte' | null;
+  videoDuration: string | null;
+  numLessons: number | null;
+  numSections: number | null;
+  enrollment: number | null;
+  rating: number | null;
+  ratingCount: number | null;
+  lastUpdated: string | null;
+  previewVideoUrl: string | null;
+  whatYouLearn: string[] | null;
+  requirements: string[] | null;
+  curriculum: CurriculumItem[];
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -119,6 +143,7 @@ export interface Category {
   children: Category[];
   products: Product[];
   seo: SeoMetadata | null;
+  subCategories: string[] | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -139,6 +164,7 @@ export interface BlogPost {
   reading_time_minutes: number | null;
   category_tags: string[];
   seo: SeoMetadata | null;
+  featured: boolean;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
