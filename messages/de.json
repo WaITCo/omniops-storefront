@@ -46,5 +46,14 @@
     "checkout": "Zur Kasse",
     "remove": "Entfernen",
     "quantity": "Menge"
+  },
+  "product": {
+    "badge": {
+      "bestseller": "Bestseller",
+      "neu": "Neu",
+      "sale": "Sale"
+    },
+    "noImage": "Kein Bild",
+    "reviews": "Bewertungen"
   }
 }
