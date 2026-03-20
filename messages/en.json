@@ -3,7 +3,10 @@
     "shop": "Shop",
     "blog": "Blog",
     "categories": "Categories",
-    "cart": "Cart"
+    "cart": "Cart",
+    "search": "Search...",
+    "searchAriaLabel": "Open search",
+    "cta": "Explore now"
   },
   "footer": {
     "imprint": "Imprint",
@@ -55,5 +58,41 @@
     },
     "noImage": "No image",
     "reviews": "Reviews"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Tips, tutorials and insights from the FORMA community",
+    "featured": "Featured",
+    "allCategories": "All",
+    "readMore": "Read article",
+    "readTime": "{minutes} min read",
+    "noPostsFound": "No posts found"
+  },
+  "shop": {
+    "filters": "Filters",
+    "resetFilters": "Reset filters",
+    "category": "Category",
+    "level": "Level",
+    "price": "Price",
+    "rating": "Rating",
+    "allLevels": "All levels",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "expert": "Expert",
+    "allPrices": "All prices",
+    "under50": "Under €50",
+    "50to100": "€50 – €100",
+    "over100": "Over €100",
+    "allRatings": "All ratings",
+    "sortBy": "Sort by",
+    "sortPopular": "Most popular",
+    "sortNewest": "Newest",
+    "sortPriceAsc": "Price ↑",
+    "sortPriceDesc": "Price ↓",
+    "sortRating": "Rating",
+    "productsFound": "{count} products found",
+    "gridView": "Grid view",
+    "listView": "List view",
+    "noProducts": "No products found"
   }
 }
