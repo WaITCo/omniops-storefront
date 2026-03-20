@@ -3,7 +3,10 @@
     "shop": "Shop",
     "blog": "Blog",
     "categories": "Categories",
-    "cart": "Cart"
+    "cart": "Cart",
+    "search": "Search...",
+    "searchAriaLabel": "Open search",
+    "cta": "Explore now"
   },
   "footer": {
     "imprint": "Imprint",
@@ -55,5 +58,14 @@
     },
     "noImage": "No image",
     "reviews": "Reviews"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Tips, tutorials and insights from the FORMA community",
+    "featured": "Featured",
+    "allCategories": "All",
+    "readMore": "Read article",
+    "readTime": "{minutes} min read",
+    "noPostsFound": "No posts found"
   }
 }
