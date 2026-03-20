@@ -20,19 +20,31 @@
     "firstName": "Vorname",
     "lastName": "Nachname",
     "email": "E-Mail-Adresse",
+    "company": "Unternehmen (optional)",
+    "product": "Produkt",
     "address": "Straße und Hausnummer",
     "city": "Stadt",
     "postalCode": "Postleitzahl",
     "country": "Land",
     "submit": "Jetzt bestellen",
+    "secureCheckout": "Sicherer Checkout",
+    "sectionContact": "Kontaktdaten",
+    "sectionOrder": "Bestelldetails",
     "errors": {
       "required": "Dieses Feld ist erforderlich",
       "invalidEmail": "Bitte gültige E-Mail-Adresse eingeben",
-      "minLength": "Mindestens {min} Zeichen erforderlich"
+      "minLength": "Mindestens {min} Zeichen erforderlich",
+      "generic": "Fehler bei der Bestellung",
+      "network": "Netzwerkfehler – bitte versuche es erneut"
     },
     "success": {
       "title": "Bestellung erfolgreich!",
       "message": "Vielen Dank für deine Bestellung. Eine Bestätigung wurde an {email} gesendet."
+    },
+    "progress": {
+      "cart": "Warenkorb",
+      "payment": "Zahlung",
+      "confirmation": "Bestätigung"
     }
   },
   "common": {

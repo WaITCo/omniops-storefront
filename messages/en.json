@@ -20,19 +20,31 @@
     "firstName": "First name",
     "lastName": "Last name",
     "email": "Email address",
+    "company": "Company (optional)",
+    "product": "Product",
     "address": "Street and number",
     "city": "City",
     "postalCode": "Postal code",
     "country": "Country",
     "submit": "Place order",
+    "secureCheckout": "Secure Checkout",
+    "sectionContact": "Contact details",
+    "sectionOrder": "Order details",
     "errors": {
       "required": "This field is required",
       "invalidEmail": "Please enter a valid email address",
-      "minLength": "At least {min} characters required"
+      "minLength": "At least {min} characters required",
+      "generic": "Something went wrong",
+      "network": "Network error – please try again"
     },
     "success": {
       "title": "Order successful!",
       "message": "Thank you for your order. A confirmation has been sent to {email}."
+    },
+    "progress": {
+      "cart": "Cart",
+      "payment": "Payment",
+      "confirmation": "Confirmation"
     }
   },
   "common": {
