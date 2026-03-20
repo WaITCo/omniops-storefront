@@ -46,5 +46,14 @@
     "checkout": "Checkout",
     "remove": "Remove",
     "quantity": "Quantity"
+  },
+  "product": {
+    "badge": {
+      "bestseller": "Bestseller",
+      "new": "New",
+      "sale": "Sale"
+    },
+    "noImage": "No image",
+    "reviews": "Reviews"
   }
 }
