@@ -134,5 +134,17 @@
         "desc": "Connect with fellow learners and get help whenever you need it."
       }
     }
+  },
+  "categories": {
+    "title": "All Categories",
+    "subtitle": "Explore our topic areas and find what suits you.",
+    "searchPlaceholder": "Search categories…",
+    "noResults": "No categories found",
+    "viewCategory": "Explore category",
+    "stats": {
+      "categories": "Categories",
+      "courses": "Courses",
+      "learners": "Learners"
+    }
   }
 }
