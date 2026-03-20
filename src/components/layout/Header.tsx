@@ -41,6 +41,32 @@ export default function Header() {
             >
               {t('categories')}
             </Link>
+
+            {/* Desktop search */}
+            <div className="relative flex items-center max-w-sm">
+              <input
+                type="search"
+                placeholder={t('search')}
+                className="w-full rounded-md border border-muted bg-background py-1.5 pl-3 pr-9 font-mono text-sm text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-1 focus:ring-foreground transition-colors"
+              />
+              <span className="pointer-events-none absolute right-2.5 text-foreground/50">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </span>
+            </div>
           </nav>
 
           {/* Desktop search – centered, hidden on mobile */}
@@ -69,6 +95,37 @@ export default function Header() {
 
           {/* Right-side actions */}
           <div className="flex items-center gap-4">
+            {/* Mobile search icon */}
+            <button
+              type="button"
+              aria-label={t('searchAriaLabel')}
+              className="md:hidden text-foreground hover:text-accent transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </button>
+
+            {/* CTA button – desktop only */}
+            <Link
+              href="/shop"
+              className="hidden md:inline-flex items-center rounded-md bg-foreground px-4 py-1.5 font-mono text-sm uppercase tracking-wider text-background hover:bg-accent transition-colors"
+            >
+              {t('cta')}
+            </Link>
+
             <LocaleSwitcher />
 
             {/* Mobile search icon button */}
