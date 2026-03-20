@@ -106,5 +106,32 @@
     "gridView": "Grid view",
     "listView": "List view",
     "noProducts": "No products found"
+  },
+  "home": {
+    "stats": {
+      "learners": "Active Learners",
+      "products": "Products",
+      "rating": "Avg. Rating",
+      "access": "Lifetime Access"
+    },
+    "bestsellers": {
+      "label": "Bestsellers",
+      "title": "Our most popular courses",
+      "viewAll": "View all"
+    },
+    "features": {
+      "access": {
+        "title": "Instant Access",
+        "desc": "Start right after purchase – no waiting, no activation needed."
+      },
+      "guarantee": {
+        "title": "30-Day Money Back",
+        "desc": "Not satisfied? Get a full refund, no questions asked."
+      },
+      "community": {
+        "title": "Community & Support",
+        "desc": "Connect with fellow learners and get help whenever you need it."
+      }
+    }
   }
 }

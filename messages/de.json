@@ -106,5 +106,32 @@
     "gridView": "Rasteransicht",
     "listView": "Listenansicht",
     "noProducts": "Keine Produkte gefunden"
+  },
+  "home": {
+    "stats": {
+      "learners": "Aktive Lernende",
+      "products": "Produkte",
+      "rating": "Bewertungsschnitt",
+      "access": "Lebenslanger Zugang"
+    },
+    "bestsellers": {
+      "label": "Bestseller",
+      "title": "Unsere beliebtesten Kurse",
+      "viewAll": "Alle anzeigen"
+    },
+    "features": {
+      "access": {
+        "title": "Sofortiger Zugang",
+        "desc": "Direkt nach dem Kauf startest du – kein Warten, kein Freischalten."
+      },
+      "guarantee": {
+        "title": "30 Tage Geld-zurück",
+        "desc": "Nicht zufrieden? Du bekommst den vollen Betrag zurück, ohne Fragen."
+      },
+      "community": {
+        "title": "Community & Support",
+        "desc": "Tausch dich mit anderen Lernenden aus und bekomm Hilfe, wenn du sie brauchst."
+      }
+    }
   }
 }
