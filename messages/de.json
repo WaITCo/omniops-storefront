@@ -134,5 +134,17 @@
         "desc": "Tausch dich mit anderen Lernenden aus und bekomm Hilfe, wenn du sie brauchst."
       }
     }
+  },
+  "categories": {
+    "title": "Alle Kategorien",
+    "subtitle": "Entdecke unsere Themenbereiche und finde das Richtige für dich.",
+    "searchPlaceholder": "Kategorie suchen…",
+    "noResults": "Keine Kategorien gefunden",
+    "viewCategory": "Kategorie erkunden",
+    "stats": {
+      "categories": "Kategorien",
+      "courses": "Kurse",
+      "learners": "Lernende"
+    }
   }
 }
